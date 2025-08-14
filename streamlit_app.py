@@ -3,7 +3,7 @@ import streamlit as st
 #from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col
 import requests
-
+from urllib.parse import urljoin
 
 # Write directly to the app
 st.title(f":cup_with_straw: Customize Your Smoothie!:cup_with_straw:")
@@ -44,8 +44,13 @@ if ingredients_list:
         #st.write('The search value for ', fruits_chosen,' is ', search_on, '.')
         st.subheader(fruits_chosen + ' Nutrition Information')
         #search_on = str(search_on).strip()
-        st.write("https://my.smoothiefroot.com/api/fruit/"+ str(search_on))
-        smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/"+ str(search_on))
+        base_url = "https://my.smoothiefroot.com/api/fruit/"
+        search_on = str(search_on).strip()
+        full_url = urljoin(base_url,search_on)
+        st.write(full_url)
+        smoothiefroot_response= requests.get(full_url)
+        #st.write("https://my.smoothiefroot.com/api/fruit/"+ str(search_on))
+        #smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/"+ str(search_on))
         sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
         #fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+ str(search_on))
         #fv_df = st.dataframe(data=fruityvice_response.json(), use_container_width=True)
